@@ -81,6 +81,47 @@ class employeeDatabaseHelper
     return $stmt->fetchAll();
   }
 
+  public function addEmployee($fName, $lName, $birthDate, $gender, $hireDate, $salary, $deptNo)
+  {
+    //since employees table doesn't auto increment, create new emp_no by incrementing lastest emp_no by 1
+    $stmt = $this->conn->prepare('SELECT emp_no FROM employees ORDER BY emp_no DESC LIMIT 1;');
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $newEmpNo = $row['emp_no'] + 1;
+
+    $this->conn->beginTransaction();
+    
+    //employees table insert 
+    $stmt = $this->conn->prepare('INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date) VALUES (:empNo, :birthDate, :fName, :lName, :gender, :hireDate)');
+    $stmt->execute(array(
+	  ':empNo' => $newEmpNo,
+          ':birthDate' => $birthDate,
+	  ':fName' => $fName,
+	  ':lName' => $lName,
+	  ':gender' => $gender,
+   	  ':hireDate' => $hireDate
+    ));
+    
+    //salaries table insert
+    $stmt = $this->conn->prepare('INSERT INTO salaries (emp_no, salary, from_date, to_date) VALUES (:empNo, :salary, :hireDate, \'9999-01-01\')');
+    $stmt->execute(array(
+	  ':empNo' => $newEmpNo,
+          ':salary' => $salary,
+          ':hireDate' => $hireDate
+    ));
+    
+    //department employees table insert
+    $stmt = $this->conn->prepare('INSERT INTO dept_emp (emp_no, dept_no, from_date, to_date) VALUES (:empNo, :deptNo, :hireDate, \'9999-01-01\')');
+    $stmt->execute(array(
+	   ':empNo' => $newEmpNo,
+           'deptNo' => $deptNo,
+           ':hireDate' => $hireDate
+    ));
+
+    $this->conn->commit();
+  }
+
   public function __destruct()
   {
     $this->conn = null;

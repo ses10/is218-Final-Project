@@ -2,7 +2,8 @@
 class collectionEmployees
 {
   protected $employees;  
-  
+  private $dbHelper;  
+
   public function __construct($deptNo)
   {
     $employeeModel = array(
@@ -13,8 +14,8 @@ class collectionEmployees
       'salary'
     );  
  
-    $db = new employeeDatabaseHelper();
-    $employees = $db->getDeptEmployees($deptNo);
+    $this->dbHelper = new employeeDatabaseHelper();
+    $employees = $this->dbHelper->getDeptEmployees($deptNo);
  
     foreach($employees as $employee)
     {
@@ -30,5 +31,10 @@ class collectionEmployees
   public function getEmployees()
   {
     return $this->employees;
+  }
+
+  public function addEmployee($fName, $lName, $birthDate, $gender, $hireDate, $salary, $deptNo)
+  {
+    $this->dbHelper->addEmployee($fName, $lName, $birthDate, $gender, $hireDate, $salary, $deptNo);
   }
 }

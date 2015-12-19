@@ -11,6 +11,7 @@ class formAddEmployee
        'Date of Birth: <input type="date" name="birthDate"><br>'.
        'Gender: <input type="radio" name="gender" value="M">Male <input type="radio" name="gender" value="F">Female<br>'.
        'Hire Date: <input type="date" name="hireDate"><br>'.
+       'Salary <input type="text" name="salary"><br>'.
        'Department: <select name="department">';
 			foreach($departments as $department)
 			{
