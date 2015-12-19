@@ -3,6 +3,7 @@ class pageAddEmployee extends page
 {
   public function get()
   {
+    $this->pageBody .= '<a href="index.php">Back</a><br><br>';
     $this->pageBody .= formAddEmployee::makeForm();
   }
  
