@@ -120,8 +120,20 @@ class employeeDatabaseHelper
     ));
 
     $this->conn->commit();
-  }
 
+    return $newEmpNo;
+  }
+   
+  public function getEmployee($empNo)
+  {
+    $stmt = $this->conn->prepare('SELECT * FROM employees WHERE emp_no = :empNo'); 
+    $stmt->bindParam(':empNo', $empNo);
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+    $stmt->execute();
+    return $stmt->fetch();   
+  }
+  
   public function __destruct()
   {
     $this->conn = null;
